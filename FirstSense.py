@@ -2,7 +2,7 @@ from sense_hat import SenseHat
 
 purple = (64,0,128)
 halfPurple = (32,0,64)
-halfYellow = (128,128,0)
+halfYellow = (64,64,0)
 
 sense = SenseHat()
 sense.set_rotation(180) # Allows power supply to be away from viewer
