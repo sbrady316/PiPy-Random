@@ -1,8 +1,8 @@
 from sense_hat import SenseHat
 import time
 
-def FadeIn(sense, max)
-    for i in range (0,max)
+def FadeIn( sense, maxComponent ):
+    for i in range (0,maxComponent):
         color = (i,0,2*i)
         sense.clear(color)
         time.sleep(0.05)
