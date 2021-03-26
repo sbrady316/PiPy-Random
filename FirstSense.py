@@ -3,9 +3,9 @@ import time
 
 def FadeIn( sense, maxComponent ):
     for i in range (0,maxComponent):
-        color = (i,0,2*i)
+        color = (i,0,i)
         sense.clear(color)
-        time.sleep(0.05)
+        time.sleep(0.1)
 
 
 purple = (64,0,128)
@@ -16,7 +16,7 @@ halfYellow = (64,64,0)
 
 sense = SenseHat()
 sense.set_rotation(180) # Allows power supply to be away from viewer
-FadeIn (sense, 32)
+FadeIn (sense, 64)
 
 sense.show_message("Hello, World", text_colour=halfYellow, back_colour=halfPurple)
 sense.clear()
