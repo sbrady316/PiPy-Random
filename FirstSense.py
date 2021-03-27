@@ -39,6 +39,7 @@ sense.set_rotation(180) # Allows power supply to be away from viewer
 sense.clear()
 
 Fade(sense, range(1,64))
+
 sense.show_message("luuk is 7!!!", text_colour=halfYellow, back_colour=b)
 Fade(sense, range(63,0,-1))
 
