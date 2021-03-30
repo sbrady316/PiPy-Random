@@ -47,14 +47,28 @@ def Move(sense):
         for x in range(0,8):
             sense.set_pixel(x,y,fore)
             time.sleep(0.1)
-            if x == 7:
-                sense.set_pixel(x,y,(0,255,0))
+            if x == 3 or x == 4:
+                sense.set_pixel(x,y,yellow)
             else:
                 sense.set_pixel(x,y,back)
+
+def Move2(sense):
+    for y in range(0,8):
+        blueLevel = 32*y + 31
+        for x in range(0,8):
+            intensity = (4 - abs(x - 4)) * 64 - 1
+            if y == 0:
+                print(f'x = {x}, intensity = {intensity}')
+            # intensity = min(255,intensity*2)
+            # Guard
+            intensity = max(0, min(255, intensity))
+            sense.set_pixel(x,y,(intensity, 0, blueLevel))
+            time.sleep(0.1)
 
 
 halfPurple = (64,0,64)
 halfYellow = (64,64,0)
+yellow = (255,255,0)
 black = (0,0,0)
 blue = (0, 0, 255)
 
@@ -65,7 +79,8 @@ sense = SenseHat()
 sense.set_rotation(180) # Allows power supply to be away from viewer
 sense.clear()
 
-Move(sense)
+#Move(sense)
+Move2(sense)
 
 # Fade(sense, range(1,64))
 
