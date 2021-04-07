@@ -2,46 +2,6 @@ import os
 import sys
 import time
 
-if len(sys.argv) > 1:
-    senseOption = sys.argv[1]
-else:
-    senseOption = 'UnSet'
-# senseOption = os.environ.get("SenseHat", "Unset")
-print(f'SenseOption = {senseOption}')
-if senseOption == "EMU":
-    print("Using emulator per SenseHat setting...")
-    from sense_emu import SenseHat
-else:
-    print("Using the real Sense Hat...")
-    from sense_hat import SenseHat
-
-def FadeIn( sense, maxComponent ):
-    for i in range (0,maxComponent):
-        color = (i,0,i)
-        sense.clear(color)
-        time.sleep(0.1)
-
-def Fade(sense, fadeRange):
-    b = (1, 1, 1)
-    g = (0, 180, 0)
-    r = (180, 0, 0)
-
-    canvas = [
-        b, b, b, b, b, b, b, b,
-        b, g, b, g, b, g, b, g,
-        b, r, b, r, b, r, b, r,
-        b, blue, b, blue, b, blue, b, blue,
-        b, b, b, b, b, b, b, b,
-        b, b, b, b, b, b, b, b,
-        b, b, b, b, b, b, b, b,
-        b, b, b, b, b, b, b, b
-    ]
-
-    for i in fadeRange:
-        canvas[i] = g
-        sense.set_pixels(canvas)
-        time.sleep(0.05)
-
 def Move(sense):
     for y in range(0,8):
         for x in range(0,8):
@@ -65,6 +25,72 @@ def Move2(sense):
             sense.set_pixel(x,y,(intensity, 0, blueLevel))
             time.sleep(0.1)
 
+# Move a box around the permiter
+def MovePerimiter(sense):
+    x = 0
+    y = 0
+    xOffset = 1
+    yOffset = 0
+    for i in range(0,65):
+        sense.set_pixel(x,y,fore)
+        time.sleep(0.05)
+        sense.set_pixel(x,y,yellow)
+
+        if x == 0:
+            if y == 0:
+                xOffset = 1
+                yOffset = 0
+            elif y == 7:
+                xOffset = 0
+                yOffset = -1
+        elif x == 7:
+            if y == 0:
+                xOffset = 0
+                yOffset = 1
+            elif y == 7:
+                xOffset = -1
+                yOffset = 0
+
+        x += xOffset
+        y += yOffset
+
+# Move with a tail
+def MoveTail(sense):
+    x = 0
+    y = 0
+    xOffset = 1
+    yOffset = 0
+    for i in range(0,65):
+        sense.set_pixel(x,y,fore)
+        time.sleep(0.05)
+        sense.set_pixel(x,y,back)
+
+        if x == 0:
+            if y == 0:
+                xOffset = 1
+                yOffset = 0
+            elif y == 7:
+                xOffset = 0
+                yOffset = -1
+        elif x == 7:
+            if y == 0:
+                xOffset = 0
+                yOffset = 1
+            elif y == 7:
+                xOffset = -1
+                yOffset = 0
+
+        x += xOffset
+        y += yOffset
+
+Operations = {
+    'Tail': MoveTail,
+    'Perimeter': MovePerimiter,
+    'Bar': Move,
+    'Hump': Move2,
+}
+
+
 
 halfPurple = (64,0,64)
 halfYellow = (64,64,0)
@@ -75,12 +101,46 @@ blue = (0, 0, 255)
 fore = blue
 back = black
 
+#
+# Main
+#
+if len(sys.argv) > 1:
+    pattern = sys.argv[1]
+else:
+    pattern = 'Move'
+
+if len(sys.argv) > 2:
+    senseOption = sys.argv[2]
+else:
+    senseOption = 'UnSet'
+# senseOption = os.environ.get("SenseHat", "Unset")
+print(f'SenseOption = {senseOption}')
+if senseOption == "EMU":
+    print("Using emulator per SenseHat setting...")
+    from sense_emu import SenseHat
+else:
+    print("Using the real Sense Hat...")
+    from sense_hat import SenseHat
+print(f'{sys.argv[0]} {pattern} {senseOption}')
+
+
 sense = SenseHat()
 sense.set_rotation(180) # Allows power supply to be away from viewer
-sense.clear()
+
+if pattern == 'All':
+    for opName, opValue in Operations.items():
+        sense.clear()
+        print(opName)
+        opValue(sense)
+else:
+    opValue = Operations.get(pattern, MoveTail)
+    sense.clear()
+    print(pattern)
+    opValue(sense)
 
 #Move(sense)
-Move2(sense)
+#Move2(sense)
+#MoveTail(sense)
 
 # Fade(sense, range(1,64))
 
