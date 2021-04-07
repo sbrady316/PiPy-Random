@@ -1,5 +1,3 @@
-import os
-import sys
 import time
 
 def Move(sense):
@@ -83,12 +81,33 @@ def MoveTail(sense):
         x += xOffset
         y += yOffset
 
-Operations = {
-    'Tail': MoveTail,
-    'Perimeter': MovePerimiter,
-    'Bar': Move,
-    'Hump': Move2,
-}
+def MoveQuick(sense):
+    x = 0
+    y = 0
+    xOffset = 1
+    yOffset = 0
+    for i in range(0,32):
+        sense.set_pixel(x,y,fore)
+        time.sleep(0.03)
+        sense.set_pixel(x,y,back)
+
+        if x == 0:
+            if y == 0:
+                xOffset = 1
+                yOffset = 0
+            elif y == 4:
+                xOffset = 0
+                yOffset = -1
+        elif x == 4:
+            if y == 0:
+                xOffset = 0
+                yOffset = 1
+            elif y == 4:
+                xOffset = -1
+                yOffset = 0
+
+        x += xOffset
+        y += yOffset
 
 
 
@@ -101,56 +120,11 @@ blue = (0, 0, 255)
 fore = blue
 back = black
 
-#
-# Main
-#
-if len(sys.argv) > 1:
-    pattern = sys.argv[1]
-else:
-    pattern = 'Move'
+Operations = {
+    'Tail': MoveTail,
+    'Perimeter': MovePerimiter,
+    'Bar': Move,
+    'Hump': Move2,
+    'Quick': MoveQuick,
+}
 
-if len(sys.argv) > 2:
-    senseOption = sys.argv[2]
-else:
-    senseOption = 'UnSet'
-# senseOption = os.environ.get("SenseHat", "Unset")
-print(f'SenseOption = {senseOption}')
-if senseOption == "EMU":
-    print("Using emulator per SenseHat setting...")
-    from sense_emu import SenseHat
-else:
-    print("Using the real Sense Hat...")
-    from sense_hat import SenseHat
-print(f'{sys.argv[0]} {pattern} {senseOption}')
-
-
-sense = SenseHat()
-sense.set_rotation(180) # Allows power supply to be away from viewer
-
-if pattern == 'All':
-    for opName, opValue in Operations.items():
-        sense.clear()
-        print(opName)
-        opValue(sense)
-else:
-    opValue = Operations.get(pattern, MoveTail)
-    sense.clear()
-    print(pattern)
-    opValue(sense)
-
-#Move(sense)
-#Move2(sense)
-#MoveTail(sense)
-
-# Fade(sense, range(1,64))
-
-# sense.show_message("luuk is 7!!!", text_colour=halfYellow, back_colour=b)
-# Fade(sense, range(63,0,-1))
-
-
-# FadeIn (sense, 64)
-
-# #sense.show_message("Hello, World", text_colour=halfYellow, back_colour=halfPurple)
-# sense.clear()
-
-# FadeIn2(sense)
