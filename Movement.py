@@ -15,8 +15,8 @@ def Move2(sense):
         blueLevel = 32*y + 31
         for x in range(0,8):
             intensity = (4 - abs(x - 4)) * 64 - 1
-            if y == 0:
-                print(f'x = {x}, intensity = {intensity}')
+            # if y == 0:
+                # print(f'x = {x}, intensity = {intensity}')
             # intensity = min(255,intensity*2)
             # Guard
             intensity = max(0, min(255, intensity))

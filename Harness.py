@@ -3,7 +3,7 @@ import sys
 import Movement
 
 def DoPattern(sense, opName, opValue):
-    print(f'{opName} -> {opValue.__name__}')
+#    print(f'{opName} -> {opValue.__name__}')
 
     sense.clear()
     opValue(sense)
@@ -22,14 +22,14 @@ if len(sys.argv) > 2:
 else:
     senseOption = 'UnSet'
 # senseOption = os.environ.get("SenseHat", "Unset")
-print(f'SenseOption = {senseOption}')
+#print(f'SenseOption = {senseOption}')
 if senseOption == "EMU":
     print("Using emulator per SenseHat setting...")
     from sense_emu import SenseHat
 else:
     print("Using the real Sense Hat...")
     from sense_hat import SenseHat
-print(f'{sys.argv[0]} {pattern} {senseOption}')
+# print(f'{sys.argv[0]} {pattern} {senseOption}')
 
 sense = SenseHat()
 sense.set_rotation(180) # Allows power supply to be away from viewer
